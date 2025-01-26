@@ -1,4 +1,4 @@
-CREATE TABLE folders {
+CREATE TABLE folders (
     id SERIAL,
     parent_id INT, 
     name varchar(60) NOT NULL,
@@ -9,4 +9,4 @@ CREATE TABLE folders {
     CONSTRAINT fk_parent
     FOREIGN KEY(parent_id)
     references folders(id)
-}
+)

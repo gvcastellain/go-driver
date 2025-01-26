@@ -1,4 +1,4 @@
-CREATE TABLE files {
+CREATE TABLE files (
     id serial,
     fodler_id INT, 
     owner_id INT NOT NULL,
@@ -14,5 +14,5 @@ CREATE TABLE files {
             references folders(id),
     CONSTRAINT fk_owner
         FOREIGN KEY(owner_id)
-            REFERENCES user(id)
-}
+            REFERENCES users(id)
+)
