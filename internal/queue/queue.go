@@ -18,8 +18,7 @@ type QueueConnection interface {
 }
 
 type Queue struct {
-	cfg any
-	qc  QueueConnection
+	qc QueueConnection
 }
 
 func New(qt QueueType, cfg any) (q *Queue, err error) {
