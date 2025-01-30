@@ -22,6 +22,8 @@ func New(bt BucketType, cfg any) (b *Bucket, err error) {
 		if rt.Name() != "AwsConfig" {
 			return nil, fmt.Errorf("cfg need to be a AwsConfig")
 		}
+
+		b.p = newAwsSession(cfg.(AwsConfig))
 	default:
 		log.Fatal("type not implemented")
 	}
