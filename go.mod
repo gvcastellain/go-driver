@@ -4,6 +4,7 @@ go 1.23.4
 
 require (
 	github.com/aws/aws-sdk-go v1.55.6
+	github.com/lib/pq v1.10.9
 	github.com/rabbitmq/amqp091-go v1.10.0
 )
 

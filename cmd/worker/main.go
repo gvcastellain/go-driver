@@ -86,5 +86,10 @@ func main() {
 			continue
 		}
 
+		if os.Remove(dst); err != nil {
+			log.Printf("error: %v", err)
+			continue
+		}
+
 	}
 }

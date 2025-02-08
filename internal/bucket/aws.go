@@ -34,7 +34,7 @@ type awsSession struct {
 }
 
 func (as *awsSession) Download(src, dst string) (file *os.File, err error) {
-	file, err = os.Create(dst)
+	file, err = os.Create(dst) //TODO - maybe delete file here by defer instead of in the main func
 	if err != nil {
 		return nil, err
 	}
