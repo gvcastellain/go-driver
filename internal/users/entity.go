@@ -14,9 +14,7 @@ var (
 )
 
 func New(name, login, password string) (*User, error) {
-	now := time.Now()
-
-	u := User{Name: name, Login: login, CreatedAt: now, ModifiedAt: now}
+	u := User{Name: name, Login: login, ModifiedAt: time.Now()}
 
 	err := u.SetPassword(password)
 
