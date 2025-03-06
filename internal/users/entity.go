@@ -52,12 +52,12 @@ func (u *User) SetPassword(password string) error {
 }
 
 type User struct {
-	ID         int64
-	Name       string
-	Login      string
-	Password   string
-	CreatedAt  time.Time
-	ModifiedAt time.Time
-	Deleted    bool
-	LastLogin  time.Time
+	ID         int64     `json:"id"`
+	Name       string    `json:"name"`
+	Login      string    `json:"login"`
+	Password   string    `json:"password"`
+	CreatedAt  time.Time `json:"created_at"`
+	ModifiedAt time.Time `json:"modified_at"`
+	Deleted    bool      `json:"-"`
+	LastLogin  time.Time `json:"last_login"`
 }

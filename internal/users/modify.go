@@ -4,9 +4,13 @@ import (
 	"database/sql"
 	"encoding/json"
 	"net/http"
+	"strconv"
+	"time"
+
+	"github.com/go-chi/chi"
 )
 
-func (h *handler) Create(rw http.ResponseWriter, r *http.Request) {
+func (h *handler) Modify(rw http.ResponseWriter, r *http.Request) {
 	u := new(User) //create as pointer
 
 	err := json.NewDecoder(r.Body).Decode(u)
@@ -15,34 +19,33 @@ func (h *handler) Create(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	u.SetPassword(u.Password)
+	if u.Name == "" {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
-	err = u.Validade()
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	id, err := Insert(h.db, u)
+	err = Update(h.db, int64(id), u)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	u.ID = id
 
 	rw.Header().Add("Content-Type", "application/json")
 	json.NewEncoder(rw).Encode(u)
 }
 
-func Insert(db *sql.DB, u *User) (int64, error) {
-	stmt := `insert into "users" ("name", "login", "password", "modified_at") VALUES ($1, $2, $3, $4)`
+func Update(db *sql.DB, id int64, u *User) error {
+	u.ModifiedAt = time.Now()
 
-	result, err := db.Exec(stmt, u.Name, u.Login, u.Password, u.ModifiedAt)
+	stmt := `update "users" set "name" = $1, "modified_at" = $2`
 
-	if err != nil {
-		return -1, err
-	}
+	_, err := db.Exec(stmt, u.Name, u.ModifiedAt)
 
-	return result.LastInsertId()
+	return err
 }
