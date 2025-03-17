@@ -17,7 +17,7 @@ func (h *handler) Delete(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = deleteFiles(h.db, int64(id))
+	err = deleteFolderContent(h.db, int64(id))
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 		return
@@ -53,6 +53,47 @@ func deleteFiles(db *sql.DB, folderID int64) error {
 		for _, file := range removedFiles {
 			file.Deleted = false
 			files.Update(db, file.ID, &file)
+		}
+	}
+
+	return nil
+}
+
+func deleteFolderContent(db *sql.DB, folderID int64) error {
+	err := deleteFiles(db, int64(folderID))
+	if err != nil {
+		return err
+	}
+
+	return deleteSubFolders(db, folderID)
+}
+
+func deleteSubFolders(db *sql.DB, folderID int64) error {
+	subFolders, err := GetSubFolders(db, folderID)
+	if err != nil {
+		return err
+	}
+
+	removedFolders := make([]Folder, 0, len(subFolders))
+
+	for _, sf := range subFolders {
+		err := Delete(db, sf.ID)
+		if err != nil {
+			break
+		}
+
+		err = deleteFolderContent(db, sf.ID)
+		if err != nil {
+			Update(db, sf.ID, &sf)
+			break
+		}
+
+		removedFolders = append(removedFolders, sf)
+	}
+
+	if len(subFolders) != len(removedFolders) {
+		for _, rf := range removedFolders {
+			Update(db, rf.ID, &rf)
 		}
 	}
 
