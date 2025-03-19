@@ -81,12 +81,12 @@ func main() {
 			continue
 		}
 
-		if b.Upload(zr, src); err != nil {
+		if err = b.Upload(zr, src); err != nil {
 			log.Printf("error: %v", err)
 			continue
 		}
 
-		if os.Remove(dst); err != nil {
+		if err = os.Remove(dst); err != nil {
 			log.Printf("error: %v", err)
 			continue
 		}
