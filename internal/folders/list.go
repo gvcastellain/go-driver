@@ -26,7 +26,7 @@ func (h *handler) List(rw http.ResponseWriter, r *http.Request) {
 }
 
 func GetRootSubFolders(db *sql.DB) ([]Folder, error) {
-	stmt := `select * from "folders" where "parentt_id" is null and "deleted" = false`
+	stmt := `select * from "folders" where "parent_id" is null and "deleted" = false`
 
 	rows, err := db.Query(stmt)
 	if err != nil {

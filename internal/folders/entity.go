@@ -11,8 +11,11 @@ var (
 
 func New(name string, parentID int64) (*Folder, error) {
 	f := &Folder{
-		ParentID: parentID,
-		Name:     name,
+		Name: name,
+	}
+
+	if parentID > 0 {
+		f.ParentID = parentID
 	}
 
 	err := f.Validade()
