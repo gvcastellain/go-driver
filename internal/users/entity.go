@@ -46,7 +46,7 @@ func (u *User) SetPassword(password string) error {
 		return ErrPasswordRequired
 	}
 
-	u.Password = fmt.Sprintf("%T", md5.Sum([]byte(password))) //TODO - %x?
+	u.Password = fmt.Sprintf("%x", md5.Sum([]byte(password))) //TODO - %x?
 
 	return nil
 }
