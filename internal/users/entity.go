@@ -41,13 +41,16 @@ func (u *User) Validade() error {
 	return nil
 }
 
+func encPass(p string) string {
+	return fmt.Sprintf("%x", md5.Sum([]byte(p)))
+}
+
 func (u *User) SetPassword(password string) error {
 	if password == "" {
 		return ErrPasswordRequired
 	}
 
-	u.Password = fmt.Sprintf("%x", md5.Sum([]byte(password))) //TODO - %x?
-
+	u.Password = encPass(password)
 	return nil
 }
 
