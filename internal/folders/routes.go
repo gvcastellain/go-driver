@@ -14,7 +14,7 @@ type handler struct {
 func SetRoutes(r chi.Router, db *sql.DB) {
 	h := handler{db}
 
-	r.Group(func(r chi.Router) {
+	r.Route("/folders", func(r chi.Router) {
 		r.Use(auth.Validate)
 
 		r.Post("/", h.Create)

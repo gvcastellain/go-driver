@@ -15,9 +15,12 @@ type handler struct {
 func SetRoutes(r chi.Router, db *sql.DB) {
 	gloabalHandler = handler{db}
 
-	r.Post("/", gloabalHandler.Create)
-	r.Put("/{id}", gloabalHandler.Modify)
-	r.Delete("/{id}", gloabalHandler.Delete)
-	r.Get("/{id}", gloabalHandler.GetByID)
-	r.Get("/", gloabalHandler.List)
+	r.Route("/users", func(r chi.Router) {
+		r.Post("/", gloabalHandler.Create) //todo - auth not required
+
+		r.Put("/{id}", gloabalHandler.Modify)
+		r.Delete("/{id}", gloabalHandler.Delete)
+		r.Get("/{id}", gloabalHandler.GetByID)
+		r.Get("/", gloabalHandler.List)
+	})
 }

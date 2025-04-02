@@ -18,7 +18,7 @@ type handler struct {
 func SetRoutes(r chi.Router, db *sql.DB, b *bucket.Bucket, q *queue.Queue) {
 	h := handler{db, b, q}
 
-	r.Group(func(r chi.Router) {
+	r.Route("/files", func(r chi.Router) {
 		r.Use(auth.Validate) //adds auth-Bearer to request
 
 		r.Post("/", h.Create)
