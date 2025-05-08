@@ -4,6 +4,7 @@ import (
 	"database/sql"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/gvcastellain/go-driver/internal/auth"
 )
 
 var gloabalHandler handler
@@ -18,9 +19,13 @@ func SetRoutes(r chi.Router, db *sql.DB) {
 	r.Route("/users", func(r chi.Router) {
 		r.Post("/", gloabalHandler.Create) //todo - auth not required
 
-		r.Put("/{id}", gloabalHandler.Modify)
-		r.Delete("/{id}", gloabalHandler.Delete)
-		r.Get("/{id}", gloabalHandler.GetByID)
-		r.Get("/", gloabalHandler.List)
+		r.Group(func(r chi.Router) {
+			r.Use(auth.Validate)
+
+			r.Put("/{id}", gloabalHandler.Modify)
+			r.Delete("/{id}", gloabalHandler.Delete)
+			r.Get("/{id}", gloabalHandler.GetByID)
+			r.Get("/", gloabalHandler.List)
+		})
 	})
 }

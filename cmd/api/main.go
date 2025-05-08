@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -10,6 +11,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/go-chi/chi/v5"
+	"github.com/gvcastellain/go-driver/internal/auth"
 	"github.com/gvcastellain/go-driver/internal/bucket"
 	"github.com/gvcastellain/go-driver/internal/files"
 	"github.com/gvcastellain/go-driver/internal/folders"
@@ -22,13 +24,15 @@ func main() {
 	db, b, qc := getSessions()
 
 	r := chi.NewRouter()
-	//r.Post("/auth") TODO - circular reference in user auth
+	r.Post("/auth", auth.HandleAuth(func(login, pass string) (auth.Authenticated, error) {
+		return users.Authenticate(login, pass)
+	}))
 
 	files.SetRoutes(r, db, b, qc)
 	folders.SetRoutes(r, db)
 	users.SetRoutes(r, db)
 
-	http.ListenAndServe("8080", r)
+	http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("SERVER_PORT")), r)
 }
 
 func getSessions() (*sql.DB, *bucket.Bucket, *queue.Queue) {
